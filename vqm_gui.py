@@ -30,6 +30,7 @@ class VqmGui(Ui_MainWindow):
         self.overview_frame = OverviewFrame(self.centralwidget)
         self.overview_frame.setupUi()
         self.verticalLayout.addWidget(self.overview_frame)
+        self.overview_frame.setEnabled(False)
 
         self.verticalLayout.addStretch()
 
@@ -44,6 +45,7 @@ class VqmGui(Ui_MainWindow):
             if vip.is_file_a_video_file():
                 self.input_frame.lineEditSelectFile.setText(video_file)
                 self.input_frame.setEnabled(False)
+                self.overview_frame.setEnabled(True)
                 self.update_statusbar(vip)
             else:
                 QMessageBox.warning(self.pushButtonBrowse, "Invalid video file",

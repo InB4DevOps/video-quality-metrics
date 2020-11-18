@@ -13,7 +13,6 @@ class InputFileFrame(VqmBaseFrame):
         super().setupUi()
 
         self.setObjectName("InputFileFrame")
-        self.resize(492, 83)
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -45,7 +44,7 @@ class OverviewFrame(VqmBaseFrame):
         super().setupUi()
 
         self.setObjectName("OverviewFrame")
-
+        
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName('verticalLayout')
 
