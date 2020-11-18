@@ -1,11 +1,11 @@
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QFrame
 
 
 class VqmBaseFrame(QFrame):
     def setupUi(self):
         self.setFrameStyle(QFrame.StyledPanel)
-        self.setLineWidth(1)
 
 
 class InputFileFrame(VqmBaseFrame):
@@ -44,7 +44,7 @@ class OverviewFrame(VqmBaseFrame):
         super().setupUi()
 
         self.setObjectName("OverviewFrame")
-        
+
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName('verticalLayout')
 
@@ -94,4 +94,56 @@ class OverviewFrame(VqmBaseFrame):
         self.lineEditClipLength.setPlaceholderText(_translate("OverviewFrame", "2"))
 
 
+class ComparisonModeFrame(VqmBaseFrame):
+    def setupUi(self):
+        super().setupUi()
+
+        self.setObjectName("ComparisonModeFrame")
+
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self)
+        self.horizontalLayout.setObjectName('horizontalLayout')
+
+        self.crf_mode_groupbox = QtWidgets.QGroupBox('CRF comparison mode')
+        self.crf_mode_groupbox.setCheckable(True)
+        self.crf_hbox = QtWidgets.QHBoxLayout()
+        self.crf_mode_groupbox.setLayout(self.crf_hbox)
+
+        crf_checkbox_model = QStandardItemModel()
+        for crf in range(0, 52):
+            item = QStandardItem(f'CRF {crf}')
+            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setCheckable(True)
+            crf_checkbox_model.appendRow(item)
+
+        self.crf_listview = QtWidgets.QListView(self)
+        self.crf_listview.setModel(crf_checkbox_model)
+        
+        self.crf_hbox.addWidget(self.crf_listview)
+
+        self.preset_vbox = QtWidgets.QVBoxLayout()
+        presets = ['ultrafast', 'superfast', 'veryfast', 'faster', 'fast',
+                   'medium', 'slow', 'slower', 'veryslow']
+        
+        for preset in presets:
+            radio = QtWidgets.QRadioButton(preset)
+            if preset == 'medium':
+                radio.setChecked(True)
+            self.preset_vbox.addWidget(radio)
+        
+        self.preset_groupbox = QtWidgets.QGroupBox()
+        self.preset_groupbox.setLayout(self.preset_vbox)
+        self.preset_groupbox.setStyleSheet('border:0;')
+
+        self.crf_hbox.addWidget(self.preset_groupbox)
+
+        self.preset_mode_groupbox = QtWidgets.QGroupBox('Preset comparison mode')
+        self.preset_mode_groupbox.setCheckable(True)
+        self.preset_mode_groupbox.setChecked(False)
+
+        self.setLayout(self.horizontalLayout)
+        self.horizontalLayout.addWidget(self.crf_mode_groupbox)
+        self.horizontalLayout.addWidget(self.preset_mode_groupbox)
+    
+    def paintEvent(self, event):
+        self.crf_listview.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
 
