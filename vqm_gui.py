@@ -6,7 +6,8 @@ import sys
 from utils import VideoInfoProvider
 from vqm_window import Ui_MainWindow
 # from vqm_overview_frame import Ui_FrameOverviewMode
-from vqm_frames import ComparisonModeFrame, InputFileFrame, OverviewFrame
+
+from vqm_widgets import ComparisonModeFrame, InputFileFrame, OverviewFrame
 
 
 class VqmGui(Ui_MainWindow):
@@ -23,17 +24,14 @@ class VqmGui(Ui_MainWindow):
         super().setupUi(MW)
 
         self.input_frame = InputFileFrame(self.centralwidget)
-        self.input_frame.setupUi()
         self.input_frame.pushButtonBrowse.clicked.connect(self.browseFile)
         self.verticalLayout.addWidget(self.input_frame)
 
         self.overview_frame = OverviewFrame(self.centralwidget)
-        self.overview_frame.setupUi()
         self.verticalLayout.addWidget(self.overview_frame)
         self.overview_frame.setEnabled(False)
 
         self.comparison_mode_frame = ComparisonModeFrame(self.centralwidget)
-        self.comparison_mode_frame.setupUi()
         self.verticalLayout.addWidget(self.comparison_mode_frame)
         self.comparison_mode_frame.setEnabled(False)
 

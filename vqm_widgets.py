@@ -1,17 +1,16 @@
 from PyQt5 import QtCore, QtWidgets
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QFrame, QGroupBox
 
 
-class VqmBaseFrame(QFrame):
-    def setupUi(self):
-        self.setFrameStyle(QFrame.StyledPanel)
+class VqmBaseWidget(QGroupBox):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
-class InputFileFrame(VqmBaseFrame):
-    def setupUi(self):
-        super().setupUi()
-
+class InputFileFrame(VqmBaseWidget):
+    def __init__(self, parent):
+        super().__init__(parent, title='Select an input video file')
         self.setObjectName("InputFileFrame")
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
@@ -39,20 +38,23 @@ class InputFileFrame(VqmBaseFrame):
         self.pushButtonBrowse.setText(_translate("InputFileFrame", "Browse"))
 
 
-class OverviewFrame(VqmBaseFrame):
-    def setupUi(self):
-        super().setupUi()
+class OverviewFrame(VqmBaseWidget):
+    def __init__(self, parent):
+        super().__init__(parent, title='Enable overview mode (optional)')
 
+        # self.title = 'Enable overview mode (optional)'
         self.setObjectName("OverviewFrame")
+        self.setCheckable(True)
+        self.setChecked(False)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName('verticalLayout')
 
-        self.checkBoxEnableOverviewMode = QtWidgets.QCheckBox(self)
-        self.checkBoxEnableOverviewMode.setObjectName("checkBoxEnableOverviewMode")
-        self.verticalLayout.addWidget(self.checkBoxEnableOverviewMode)
+        # self.checkBoxEnableOverviewMode = QtWidgets.QCheckBox(self)
+        # self.checkBoxEnableOverviewMode.setObjectName("checkBoxEnableOverviewMode")
+        # self.verticalLayout.addWidget(self.checkBoxEnableOverviewMode)
 
-        self.checkBoxEnableOverviewMode.clicked.connect(self.toggle_options)
+        self.clicked.connect(self.toggle_options)
 
         self.overview_options = QtWidgets.QWidget(self)
         self.overview_options.setObjectName("overview_options")
@@ -83,20 +85,20 @@ class OverviewFrame(VqmBaseFrame):
         self.retranslateUi()
 
     def toggle_options(self):
-        self.overview_options.setEnabled(not self.overview_options.isEnabled())
+        self.overview_options.setEnabled(self.isChecked())
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.checkBoxEnableOverviewMode.setText(_translate("OverviewFrame", "Enable overview mode (optional)"))
+        # self.checkBoxEnableOverviewMode.setText(_translate("OverviewFrame", "Enable overview mode (optional)"))
         self.labelInterval.setText(_translate("OverviewFrame", "Interval (seconds)"))
         self.lineEditInterval.setPlaceholderText(_translate("OverviewFrame", "60"))
         self.labelClipLength.setText(_translate("OverviewFrame", "Clip Length (seconds)"))
         self.lineEditClipLength.setPlaceholderText(_translate("OverviewFrame", "2"))
 
 
-class ComparisonModeFrame(VqmBaseFrame):
-    def setupUi(self):
-        super().setupUi()
+class ComparisonModeFrame(VqmBaseWidget):
+    def __init__(self, parent):
+        super().__init__(parent)
 
         self.setObjectName("ComparisonModeFrame")
 
