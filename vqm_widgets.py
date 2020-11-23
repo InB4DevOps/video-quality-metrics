@@ -20,21 +20,21 @@ class InputFileWidget(VqmBaseWidget):
     def __init__(self, parent):
         super().__init__(parent, title='Select an input video file')
 
-        self.setObjectName("InputFileWidget")
+        self.setObjectName('InputFileWidget')
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
-        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.horizontalLayout.setObjectName('horizontalLayout')
 
         self.labelselectfile = QtWidgets.QLabel(self)
-        self.labelselectfile.setObjectName("labelselectfile")
+        self.labelselectfile.setObjectName('labelselectfile')
         self.horizontalLayout.addWidget(self.labelselectfile)
 
         self.lineEditSelectFile = QtWidgets.QLineEdit(self)
-        self.lineEditSelectFile.setObjectName("lineEditSelectFile")
+        self.lineEditSelectFile.setObjectName('lineEditSelectFile')
         self.horizontalLayout.addWidget(self.lineEditSelectFile)
 
         self.pushButtonBrowse = QtWidgets.QPushButton(self)
-        self.pushButtonBrowse.setObjectName("pushButtonBrowse")
+        self.pushButtonBrowse.setObjectName('pushButtonBrowse')
         self.horizontalLayout.addWidget(self.pushButtonBrowse)
 
         self.retranslateUi()
@@ -45,34 +45,33 @@ class InputFileWidget(VqmBaseWidget):
     def browseFile(self):
         video_file, _ = QtWidgets.QFileDialog.getOpenFileName(
                         None,
-                        "Select a video file",
-                        "",
-                        "All video files (*)")
+                        'Select a video file',
+                        '',
+                        'All video files (*)')
 
         if video_file != '':
             vip = VideoInfoProvider(video_file)
             if vip.is_file_a_video_file():
                 self.lineEditSelectFile.setText(video_file)
-                # self.input_Widget.setEnabled(False)
-                # self.overview_Widget.setEnabled(True)
                 self.video_selected.emit()
                 self.status_bar_text.emit(vip.get_statusbar_text())
             else:
-                QMessageBox.warning(self.pushButtonBrowse, "Invalid video file",
-                                    "The selected file is not a video file.")
+                QMessageBox.warning(self.pushButtonBrowse,
+                                    'Invalid video file',
+                                    'The selected file is not a video file.')
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.labelselectfile.setText(_translate("InputFileWidget",
-                                                "Select a video file"))
-        self.pushButtonBrowse.setText(_translate("InputFileWidget", "Browse"))
+        self.labelselectfile.setText(_translate('InputFileWidget',
+                                                'Select a video file'))
+        self.pushButtonBrowse.setText(_translate('InputFileWidget', 'Browse'))
 
 
 class OverviewWidget(VqmBaseWidget):
     def __init__(self, parent):
         super().__init__(parent, title='Enable overview mode (optional)')
 
-        self.setObjectName("OverviewWidget")
+        self.setObjectName('OverviewWidget')
         self.setCheckable(True)
         self.setChecked(False)
 
@@ -82,49 +81,43 @@ class OverviewWidget(VqmBaseWidget):
         self.clicked.connect(self.toggle_options)
 
         self.overview_options = QtWidgets.QWidget(self)
-        self.overview_options.setObjectName("overview_options")
+        self.overview_options.setObjectName('overview_options')
         self.overview_options.setEnabled(False)
 
         self.grid_layout = QtWidgets.QGridLayout(self.overview_options)
-        self.grid_layout.setObjectName("grid_layout")
+        self.grid_layout.setObjectName('grid_layout')
 
-        self.labelInterval = QtWidgets.QLabel(self.overview_options)
-        self.labelInterval.setObjectName("labelInterval")
+        self.labelInterval = QtWidgets.QLabel('Interval (seconds)')
+        self.labelInterval.setObjectName('labelInterval')
         self.grid_layout.addWidget(self.labelInterval, 0, 0, 1, 1)
 
         self.lineEditInterval = QtWidgets.QLineEdit(self.overview_options)
         self.lineEditInterval.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
-        self.lineEditInterval.setObjectName("lineEditInterval")
+        self.lineEditInterval.setPlaceholderText('60')
+        self.lineEditInterval.setObjectName('lineEditInterval')
         self.grid_layout.addWidget(self.lineEditInterval, 0, 1, 1, 1)
 
-        self.labelClipLength = QtWidgets.QLabel(self.overview_options)
-        self.labelClipLength.setObjectName("labelClipLength")
+        self.labelClipLength = QtWidgets.QLabel('Clip Length (seconds)')
+        self.labelClipLength.setObjectName('labelClipLength')
         self.grid_layout.addWidget(self.labelClipLength, 0, 2, 1, 1)
 
         self.lineEditClipLength = QtWidgets.QLineEdit(self.overview_options)
         self.lineEditClipLength.setInputMethodHints(QtCore.Qt.ImhDigitsOnly)
-        self.lineEditClipLength.setObjectName("lineEditClipLength")
+        self.lineEditClipLength.setPlaceholderText('2')
+        self.lineEditClipLength.setObjectName('lineEditClipLength')
         self.grid_layout.addWidget(self.lineEditClipLength, 0, 3, 1, 1)
 
         self.verticalLayout.addWidget(self.overview_options)
-        self.retranslateUi()
 
     def toggle_options(self):
         self.overview_options.setEnabled(self.isChecked())
-
-    def retranslateUi(self):
-        _translate = QtCore.QCoreApplication.translate
-        self.labelInterval.setText(_translate("OverviewWidget", "Interval (seconds)"))
-        self.lineEditInterval.setPlaceholderText(_translate("OverviewWidget", "60"))
-        self.labelClipLength.setText(_translate("OverviewWidget", "Clip Length (seconds)"))
-        self.lineEditClipLength.setPlaceholderText(_translate("OverviewWidget", "2"))
 
 
 class ComparisonModeWidget(VqmBaseWidget):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.setObjectName("ComparisonModeWidget")
+        self.setObjectName('ComparisonModeWidget')
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.horizontalLayout.setObjectName('horizontalLayout')
@@ -166,7 +159,8 @@ class ComparisonModeWidget(VqmBaseWidget):
         self.crf_vbox.addWidget(self.preset_combobox)
 
         # create groupbox for preset mode
-        self.preset_mode_groupbox = QtWidgets.QGroupBox('Preset comparison mode')
+        self.preset_mode_groupbox = QtWidgets.QGroupBox('Preset comparison '
+                                                        'mode')
         self.preset_mode_groupbox.setCheckable(True)
         self.preset_mode_groupbox.setChecked(False)
 
@@ -174,7 +168,8 @@ class ComparisonModeWidget(VqmBaseWidget):
         self.preset_vbox = QtWidgets.QVBoxLayout()
         self.preset_mode_groupbox.setLayout(self.preset_vbox)
         # create label
-        self.select_presets_label = QtWidgets.QLabel('Select presets for comparison')
+        self.select_presets_label = QtWidgets.QLabel('Select presets for '
+                                                     'comparison')
         self.preset_vbox.addWidget(self.select_presets_label)
 
         # create preset selection listview
