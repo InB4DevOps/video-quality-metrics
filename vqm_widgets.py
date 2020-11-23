@@ -4,6 +4,7 @@ from PyQt5.QtGui import QStandardItem, QStandardItemModel
 from PyQt5.QtWidgets import QGroupBox
 
 from utils import VideoInfoProvider
+from vqm_consts import PRESETS
 
 
 class VqmBaseWidget(QGroupBox):
@@ -130,50 +131,98 @@ class ComparisonModeWidget(VqmBaseWidget):
 
         self.crf_mode_groupbox = QtWidgets.QGroupBox('CRF comparison mode')
         self.crf_mode_groupbox.setCheckable(True)
-        self.crf_hbox = QtWidgets.QHBoxLayout()
-        self.crf_mode_groupbox.setLayout(self.crf_hbox)
+        self.crf_vbox = QtWidgets.QVBoxLayout()
+        self.crf_mode_groupbox.setLayout(self.crf_vbox)
+
+        self.select_crfs_label = QtWidgets.QLabel('Select CRFs for comparison')
+        self.crf_vbox.addWidget(self.select_crfs_label)
 
         crf_checkbox_model = QStandardItemModel()
         for crf in range(0, 52):
             item = QStandardItem(f'CRF {crf}')
             item.setCheckState(QtCore.Qt.Unchecked)
             item.setCheckable(True)
+            item.setData(crf)
             crf_checkbox_model.appendRow(item)
 
         self.crf_listview = QtWidgets.QListView(self)
         self.crf_listview.setModel(crf_checkbox_model)
 
-        self.crf_hbox.addWidget(self.crf_listview)
+        self.crf_vbox.addWidget(self.crf_listview)
 
-        self.preset_vbox = QtWidgets.QVBoxLayout()
-        presets = ['ultrafast', 'superfast', 'veryfast', 'faster', 'fast',
-                   'medium', 'slow', 'slower', 'veryslow']
+        # create preset combobox
+        self.preset_combobox_model = QStandardItemModel()
 
-        for preset in presets:
-            radio = QtWidgets.QRadioButton(preset)
-            if preset == 'medium':
-                radio.setChecked(True)
-            self.preset_vbox.addWidget(radio)
+        for preset in PRESETS:
+            item = QStandardItem(preset)
+            item.setData(preset)
+            self.preset_combobox_model.appendRow(item)
 
-        self.preset_groupbox = QtWidgets.QGroupBox()
-        self.preset_groupbox.setLayout(self.preset_vbox)
-        self.preset_groupbox.setStyleSheet('border:0;')
+        self.preset_combobox = QtWidgets.QComboBox()
+        self.preset_combobox.setModel(self.preset_combobox_model)
 
-        self.crf_hbox.addWidget(self.preset_groupbox)
+        self.select_preset_label = QtWidgets.QLabel('Select a preset')
+        self.crf_vbox.addWidget(self.select_preset_label)
+        self.crf_vbox.addWidget(self.preset_combobox)
 
+        # create groupbox for preset mode
         self.preset_mode_groupbox = QtWidgets.QGroupBox('Preset comparison mode')
         self.preset_mode_groupbox.setCheckable(True)
         self.preset_mode_groupbox.setChecked(False)
 
+        # create vertical layout for preset mode
+        self.preset_vbox = QtWidgets.QVBoxLayout()
+        self.preset_mode_groupbox.setLayout(self.preset_vbox)
+        # create label
+        self.select_presets_label = QtWidgets.QLabel('Select presets for comparison')
+        self.preset_vbox.addWidget(self.select_presets_label)
+
+        # create preset selection listview
+        preset_listview_model = QStandardItemModel()
+
+        for preset in PRESETS:
+            item = QStandardItem(preset)
+            item.setData(preset)
+            item.setCheckState(QtCore.Qt.Unchecked)
+            item.setCheckable(True)
+            preset_listview_model.appendRow(item)
+
+        self.preset_listview = QtWidgets.QListView(self)
+        self.preset_listview.setModel(preset_listview_model)
+        self.preset_combobox.setCurrentIndex(5)     # preset medium
+
+        self.preset_vbox.addWidget(self.preset_listview)
+
+        # create label
+        self.select_CRF_label = QtWidgets.QLabel('Select a CRF')
+        self.preset_vbox.addWidget(self.select_CRF_label)
+
+        # create CRF combobox
+        crf_combobox_model = QStandardItemModel()
+
+        for crf in range(0, 52):
+            item = QStandardItem(f'CRF {crf}')
+            item.setData(crf)
+            crf_combobox_model.appendRow(item)
+
+        self.crf_combobox = QtWidgets.QComboBox()
+        self.crf_combobox.setModel(crf_combobox_model)
+        self.crf_combobox.setCurrentIndex(18)   # crf 18 default
+        
+        self.preset_vbox.addWidget(self.crf_combobox)
+
+        # add group boxes to horizontal layout
         self.setLayout(self.horizontalLayout)
         self.horizontalLayout.addWidget(self.crf_mode_groupbox)
         self.horizontalLayout.addWidget(self.preset_mode_groupbox)
 
+        # connect signals to slots
         self.preset_mode_groupbox.clicked.connect(self.preset_groupbox_clicked)
         self.crf_mode_groupbox.clicked.connect(self.crf_groupbox_clicked)
 
-    def paintEvent(self, event):
-        self.crf_listview.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
+    # def paintEvent(self, event):
+    #     self.crf_listview.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
+    #     self.preset_combobox.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
 
     def crf_groupbox_clicked(self, checked):
         self.preset_mode_groupbox.setChecked(not checked)
