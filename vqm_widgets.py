@@ -56,9 +56,10 @@ class InputFileWidget(VqmBaseWidget):
                 self.video_selected.emit()
                 self.status_bar_text.emit(vip.get_statusbar_text())
             else:
-                QMessageBox.warning(self.pushButtonBrowse,
-                                    'Invalid video file',
-                                    'The selected file is not a video file.')
+                QtWidgets.QMessageBox.warning(self.pushButtonBrowse,
+                                              'Invalid video file',
+                                              'The selected file is not a '
+                                              'video file.')
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -203,7 +204,7 @@ class ComparisonModeWidget(VqmBaseWidget):
         self.crf_combobox = QtWidgets.QComboBox()
         self.crf_combobox.setModel(crf_combobox_model)
         self.crf_combobox.setCurrentIndex(18)   # crf 18 default
-        
+
         self.preset_vbox.addWidget(self.crf_combobox)
 
         # add group boxes to horizontal layout
@@ -214,10 +215,6 @@ class ComparisonModeWidget(VqmBaseWidget):
         # connect signals to slots
         self.preset_mode_groupbox.clicked.connect(self.preset_groupbox_clicked)
         self.crf_mode_groupbox.clicked.connect(self.crf_groupbox_clicked)
-
-    # def paintEvent(self, event):
-    #     self.crf_listview.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
-    #     self.preset_combobox.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
 
     def crf_groupbox_clicked(self, checked):
         self.preset_mode_groupbox.setChecked(not checked)
