@@ -1,13 +1,12 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import QObject, pyqtSlot
-from PyQt5.QtWidgets import QMessageBox, QFrame
+# from PyQt5.QtCore import QObject, pyqtSlot
+# from PyQt5.QtWidgets import QMessageBox, QWidget
 import sys
 
-from utils import VideoInfoProvider
 from vqm_window import Ui_MainWindow
-# from vqm_overview_frame import Ui_FrameOverviewMode
+# from vqm_overview_Widget import Ui_WidgetOverviewMode
 
-from vqm_widgets import ComparisonModeFrame, InputFileFrame, OverviewFrame
+from vqm_widgets import ComparisonModeWidget, InputFileWidget, OverviewWidget
 
 
 class VqmGui(Ui_MainWindow):
@@ -16,46 +15,34 @@ class VqmGui(Ui_MainWindow):
         '''
         super().__init__()
 
-
     def setupUi(self, MW):
         ''' Setup the UI of the super class, and add here code
         that relates to the way we want our UI to operate.
         '''
         super().setupUi(MW)
 
-        self.input_frame = InputFileFrame(self.centralwidget)
-        self.input_frame.pushButtonBrowse.clicked.connect(self.browseFile)
-        self.verticalLayout.addWidget(self.input_frame)
+        self.input_Widget = InputFileWidget(self.centralwidget)
+        # self.input_Widget
+        self.verticalLayout.addWidget(self.input_Widget)
 
-        self.overview_frame = OverviewFrame(self.centralwidget)
-        self.verticalLayout.addWidget(self.overview_frame)
-        self.overview_frame.setEnabled(False)
+        self.overview_Widget = OverviewWidget(self.centralwidget)
+        self.verticalLayout.addWidget(self.overview_Widget)
+        self.overview_Widget.setEnabled(False)
 
-        self.comparison_mode_frame = ComparisonModeFrame(self.centralwidget)
-        self.verticalLayout.addWidget(self.comparison_mode_frame)
-        self.comparison_mode_frame.setEnabled(False)
+        self.comparison_mode_Widget = ComparisonModeWidget(self.centralwidget)
+        self.verticalLayout.addWidget(self.comparison_mode_Widget)
+        self.comparison_mode_Widget.setEnabled(False)
 
         self.verticalLayout.addStretch()
+        self.input_Widget.video_selected.connect(self.enable_widgets)
+        self.input_Widget.status_bar_text.connect(self.update_statusbar)
 
-    def browseFile(self):
-        video_file, _ = QtWidgets.QFileDialog.getOpenFileName(
-                        None,
-                        "Select a video file",
-                        "",
-                        "All video files (*)")
-        if video_file != '':
-            vip = VideoInfoProvider(video_file)
-            if vip.is_file_a_video_file():
-                self.input_frame.lineEditSelectFile.setText(video_file)
-                self.input_frame.setEnabled(False)
-                self.overview_frame.setEnabled(True)
-                self.update_statusbar(vip)
-            else:
-                QMessageBox.warning(self.pushButtonBrowse, "Invalid video file",
-                                    "The selected file is not a video file.")
+    def enable_widgets(self):
+        self.overview_Widget.setEnabled(True)
+        self.comparison_mode_Widget.setEnabled(True)
 
-    def update_statusbar(self, vip):
-        self.statusbar.showMessage(vip.get_statusbar_text())
+    def update_statusbar(self, text):
+        self.statusbar.showMessage(text)
 
 
 def main():

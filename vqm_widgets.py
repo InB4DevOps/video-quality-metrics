@@ -1,6 +1,9 @@
 from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
-from PyQt5.QtWidgets import QFrame, QGroupBox
+from PyQt5.QtWidgets import QGroupBox
+
+from utils import VideoInfoProvider
 
 
 class VqmBaseWidget(QGroupBox):
@@ -8,10 +11,15 @@ class VqmBaseWidget(QGroupBox):
         super().__init__(*args, **kwargs)
 
 
-class InputFileFrame(VqmBaseWidget):
+class InputFileWidget(VqmBaseWidget):
+
+    video_selected = pyqtSignal()
+    status_bar_text = pyqtSignal(str)
+
     def __init__(self, parent):
         super().__init__(parent, title='Select an input video file')
-        self.setObjectName("InputFileFrame")
+
+        self.setObjectName("InputFileWidget")
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -31,28 +39,44 @@ class InputFileFrame(VqmBaseWidget):
         self.retranslateUi()
         QtCore.QMetaObject.connectSlotsByName(self)
 
+        self.pushButtonBrowse.clicked.connect(self.browseFile)
+
+    def browseFile(self):
+        video_file, _ = QtWidgets.QFileDialog.getOpenFileName(
+                        None,
+                        "Select a video file",
+                        "",
+                        "All video files (*)")
+
+        if video_file != '':
+            vip = VideoInfoProvider(video_file)
+            if vip.is_file_a_video_file():
+                self.lineEditSelectFile.setText(video_file)
+                # self.input_Widget.setEnabled(False)
+                # self.overview_Widget.setEnabled(True)
+                self.video_selected.emit()
+                self.status_bar_text.emit(vip.get_statusbar_text())
+            else:
+                QMessageBox.warning(self.pushButtonBrowse, "Invalid video file",
+                                    "The selected file is not a video file.")
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.labelselectfile.setText(_translate("InputFileFrame",
+        self.labelselectfile.setText(_translate("InputFileWidget",
                                                 "Select a video file"))
-        self.pushButtonBrowse.setText(_translate("InputFileFrame", "Browse"))
+        self.pushButtonBrowse.setText(_translate("InputFileWidget", "Browse"))
 
 
-class OverviewFrame(VqmBaseWidget):
+class OverviewWidget(VqmBaseWidget):
     def __init__(self, parent):
         super().__init__(parent, title='Enable overview mode (optional)')
 
-        # self.title = 'Enable overview mode (optional)'
-        self.setObjectName("OverviewFrame")
+        self.setObjectName("OverviewWidget")
         self.setCheckable(True)
         self.setChecked(False)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName('verticalLayout')
-
-        # self.checkBoxEnableOverviewMode = QtWidgets.QCheckBox(self)
-        # self.checkBoxEnableOverviewMode.setObjectName("checkBoxEnableOverviewMode")
-        # self.verticalLayout.addWidget(self.checkBoxEnableOverviewMode)
 
         self.clicked.connect(self.toggle_options)
 
@@ -89,18 +113,17 @@ class OverviewFrame(VqmBaseWidget):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        # self.checkBoxEnableOverviewMode.setText(_translate("OverviewFrame", "Enable overview mode (optional)"))
-        self.labelInterval.setText(_translate("OverviewFrame", "Interval (seconds)"))
-        self.lineEditInterval.setPlaceholderText(_translate("OverviewFrame", "60"))
-        self.labelClipLength.setText(_translate("OverviewFrame", "Clip Length (seconds)"))
-        self.lineEditClipLength.setPlaceholderText(_translate("OverviewFrame", "2"))
+        self.labelInterval.setText(_translate("OverviewWidget", "Interval (seconds)"))
+        self.lineEditInterval.setPlaceholderText(_translate("OverviewWidget", "60"))
+        self.labelClipLength.setText(_translate("OverviewWidget", "Clip Length (seconds)"))
+        self.lineEditClipLength.setPlaceholderText(_translate("OverviewWidget", "2"))
 
 
-class ComparisonModeFrame(VqmBaseWidget):
+class ComparisonModeWidget(VqmBaseWidget):
     def __init__(self, parent):
         super().__init__(parent)
 
-        self.setObjectName("ComparisonModeFrame")
+        self.setObjectName("ComparisonModeWidget")
 
         self.horizontalLayout = QtWidgets.QHBoxLayout(self)
         self.horizontalLayout.setObjectName('horizontalLayout')
@@ -119,19 +142,19 @@ class ComparisonModeFrame(VqmBaseWidget):
 
         self.crf_listview = QtWidgets.QListView(self)
         self.crf_listview.setModel(crf_checkbox_model)
-        
+
         self.crf_hbox.addWidget(self.crf_listview)
 
         self.preset_vbox = QtWidgets.QVBoxLayout()
         presets = ['ultrafast', 'superfast', 'veryfast', 'faster', 'fast',
                    'medium', 'slow', 'slower', 'veryslow']
-        
+
         for preset in presets:
             radio = QtWidgets.QRadioButton(preset)
             if preset == 'medium':
                 radio.setChecked(True)
             self.preset_vbox.addWidget(radio)
-        
+
         self.preset_groupbox = QtWidgets.QGroupBox()
         self.preset_groupbox.setLayout(self.preset_vbox)
         self.preset_groupbox.setStyleSheet('border:0;')
@@ -145,7 +168,15 @@ class ComparisonModeFrame(VqmBaseWidget):
         self.setLayout(self.horizontalLayout)
         self.horizontalLayout.addWidget(self.crf_mode_groupbox)
         self.horizontalLayout.addWidget(self.preset_mode_groupbox)
-    
+
+        self.preset_mode_groupbox.clicked.connect(self.preset_groupbox_clicked)
+        self.crf_mode_groupbox.clicked.connect(self.crf_groupbox_clicked)
+
     def paintEvent(self, event):
         self.crf_listview.setMaximumWidth(self.crf_mode_groupbox.width() / 2)
 
+    def crf_groupbox_clicked(self, checked):
+        self.preset_mode_groupbox.setChecked(not checked)
+
+    def preset_groupbox_clicked(self, checked):
+        self.crf_mode_groupbox.setChecked(not checked)
