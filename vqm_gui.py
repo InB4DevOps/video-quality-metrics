@@ -1,4 +1,4 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5 import QtWidgets
 # from PyQt5.QtCore import QObject, pyqtSlot
 # from PyQt5.QtWidgets import QMessageBox, QWidget
 import sys
@@ -6,6 +6,7 @@ import sys
 from vqm_window import Ui_MainWindow
 # from vqm_overview_Widget import Ui_WidgetOverviewMode
 
+from vqm_model import VqmModel
 from vqm_widgets import ComparisonModeWidget, InputFileWidget, OverviewWidget
 
 
@@ -21,15 +22,19 @@ class VqmGui(Ui_MainWindow):
         '''
         super().setupUi(MW)
 
-        self.input_Widget = InputFileWidget(self.centralwidget)
+        # create model
+        self.model = VqmModel()
+
+        self.input_Widget = InputFileWidget(self.centralwidget, self.model)
         # self.input_Widget
         self.verticalLayout.addWidget(self.input_Widget)
 
-        self.overview_Widget = OverviewWidget(self.centralwidget)
+        self.overview_Widget = OverviewWidget(self.centralwidget, self.model)
         self.verticalLayout.addWidget(self.overview_Widget)
         self.overview_Widget.setEnabled(False)
 
-        self.comparison_mode_Widget = ComparisonModeWidget(self.centralwidget)
+        self.comparison_mode_Widget = ComparisonModeWidget(self.centralwidget,
+                                                           self.model)
         self.verticalLayout.addWidget(self.comparison_mode_Widget)
         self.comparison_mode_Widget.setEnabled(False)
 
