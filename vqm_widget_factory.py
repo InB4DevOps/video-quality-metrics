@@ -1,5 +1,6 @@
 from enums import WidgetType
-from vqm_widgets import ComparisonModeWidget, InputFileWidget, OverviewWidget
+from vqm_widgets import ComparisonModeWidget, InputFileWidget, \
+                        OverviewWidget, StartProcessWidget
 
 
 class WidgetFactory:
@@ -11,10 +12,11 @@ class WidgetFactory:
         self.widgets = {
             WidgetType.input: InputFileWidget,
             WidgetType.overview: OverviewWidget,
-            WidgetType.comparison: ComparisonModeWidget
+            WidgetType.comparison: ComparisonModeWidget,
+            WidgetType.start_process: StartProcessWidget
         }
 
-    def create_widget(self, widget_type):
+    def create(self, widget_type):
         widget_func = self.widgets.get(widget_type)
 
         return widget_func(self.central_widget, self.model)

@@ -195,3 +195,20 @@ class ComparisonModeWidget(VqmBaseWidget):
     def preset_groupbox_clicked(self, checked):
         self.crf_mode_groupbox.setChecked(not checked)
         self.model.vqm_mode = VqmMode.preset
+
+
+class StartProcessWidget(VqmBaseWidget):
+    def __init__(self, parent, model):
+        super().__init__(parent, model, title='Start VQM analysis')
+
+        self.setObjectName('StartProcessWidget')
+        self.horizontal_Layout = QtWidgets.QHBoxLayout(self)
+        self.horizontal_Layout.setObjectName('horizontalLayout')
+        self.horizontal_Layout.setAlignment(QtCore.Qt.AlignRight)
+
+        self.pushButton_Start = QtWidgets.QPushButton(self)
+        self.pushButton_Start.setObjectName('pushButton_Start')
+        self.pushButton_Start.setText('Start')
+        self.pushButton_Start.setFixedWidth(80)
+        self.horizontal_Layout.addWidget(self.pushButton_Start,
+                                         QtCore.Qt.AlignRight)

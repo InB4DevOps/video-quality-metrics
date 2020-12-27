@@ -35,6 +35,10 @@ class VqmGui(Ui_MainWindow):
         self.verticalLayout.addWidget(self.comparison_mode_Widget)
         self.comparison_mode_Widget.setEnabled(False)
 
+        self.start_process_Widget = wf.create(WidgetType.start_process)
+        self.verticalLayout.addWidget(self.start_process_Widget)
+        self.start_process_Widget.setEnabled(False)
+
         self.verticalLayout.addStretch()
         self.input_Widget.video_selected.connect(self.enable_widgets)
         self.input_Widget.status_bar_text.connect(self.update_statusbar)
@@ -42,6 +46,7 @@ class VqmGui(Ui_MainWindow):
     def enable_widgets(self):
         self.overview_Widget.setEnabled(True)
         self.comparison_mode_Widget.setEnabled(True)
+        self.start_process_Widget.setEnabled(True)
 
     def update_statusbar(self, text):
         self.statusbar.showMessage(text)

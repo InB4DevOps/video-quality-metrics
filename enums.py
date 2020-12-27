@@ -15,3 +15,4 @@ class WidgetType(Enum):
     input = 1
     overview = 2
     comparison = 3
+    start_process = 4
