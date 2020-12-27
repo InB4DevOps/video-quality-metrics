@@ -75,16 +75,14 @@ class OverviewWidget(VqmBaseWidget):
 
         self.setObjectName('OverviewWidget')
         self.setCheckable(True)
-        self.setChecked(False)
+        self.clicked.connect(self.toggle_options)
+        self.setChecked(self.model.overview_mode.enabled)
 
         self.verticalLayout = QtWidgets.QVBoxLayout(self)
         self.verticalLayout.setObjectName('verticalLayout')
 
-        self.clicked.connect(self.toggle_options)
-
         self.overview_options = QtWidgets.QWidget(self)
         self.overview_options.setObjectName('overview_options')
-        self.overview_options.setEnabled(False)
 
         self.grid_layout = QtWidgets.QGridLayout(self.overview_options)
         self.grid_layout.setObjectName('grid_layout')
@@ -150,7 +148,6 @@ class ComparisonModeWidget(VqmBaseWidget):
         # create groupbox for preset mode
         self.preset_mode_groupbox = QtWidgets.QGroupBox('Preset comparison')
         self.preset_mode_groupbox.setCheckable(True)
-        self.preset_mode_groupbox.setChecked(False)
 
         # create vertical layout for preset mode
         self.preset_vbox = QtWidgets.QVBoxLayout()
@@ -186,6 +183,10 @@ class ComparisonModeWidget(VqmBaseWidget):
         # connect signals to slots
         self.preset_mode_groupbox.clicked.connect(self.preset_groupbox_clicked)
         self.crf_mode_groupbox.clicked.connect(self.crf_groupbox_clicked)
+
+        self.preset_mode_groupbox.setChecked(self.model.vqm_mode ==
+                                             VqmMode.preset)
+        self.crf_mode_groupbox.setChecked(self.model.vqm_mode == VqmMode.crf)
 
     def crf_groupbox_clicked(self, checked):
         self.preset_mode_groupbox.setChecked(not checked)

@@ -8,6 +8,7 @@ from enums import VqmMode
 class VqmModel:
     def __init__(self):
         self.video_path = str()
+        self.overview_mode = OverviewMode()
         self.crf_mode = CrfMode()
         self.preset_mode = PresetMode()
         self.vqm_mode = VqmMode.crf
@@ -29,6 +30,13 @@ class CrfMode:
             item = QStandardItem(preset)
             item.setData(preset)
             self.preset_combobox_model.appendRow(item)
+
+
+class OverviewMode:
+    def __init__(self):
+        self.enabled = False
+        self.interval = int()
+        self.clip_length = int()
 
 
 class PresetMode:
