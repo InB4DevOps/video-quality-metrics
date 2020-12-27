@@ -1,6 +1,7 @@
-import sys
+import time
 import math
-from time import time
+import sys
+from pathlib import Path
 
 from ffmpeg import probe
 

@@ -16,17 +16,16 @@ class VqmGui(Ui_MainWindow):
         '''
         super().__init__()
 
-    def setupUi(self, MW):
+    def setupUi(self, MainWindow):
         ''' Setup the UI of the super class, and add here code
         that relates to the way we want our UI to operate.
         '''
-        super().setupUi(MW)
+        super().setupUi(MainWindow)
 
         # create model
         self.model = VqmModel()
 
         self.input_Widget = InputFileWidget(self.centralwidget, self.model)
-        # self.input_Widget
         self.verticalLayout.addWidget(self.input_Widget)
 
         self.overview_Widget = OverviewWidget(self.centralwidget, self.model)

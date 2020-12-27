@@ -39,7 +39,7 @@ class PresetMode:
             item.setCheckState(QtCore.Qt.Unchecked)
             item.setCheckable(True)
             self.preset_listview_model.appendRow(item)
-        
+
         self.crf_combobox_model = QStandardItemModel()
 
         for crf in range(0, 52):
