@@ -1,10 +1,5 @@
 import subprocess
-from enum import Enum
-
-
-class Encoder(Enum):
-    x264 = 1
-    x265 = 2
+from enums import Encoder
 
 
 class FfmpegArguments:

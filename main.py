@@ -4,10 +4,11 @@ from argparse import ArgumentParser, RawTextHelpFormatter
 from pathlib import Path
 from prettytable import PrettyTable
 
+from enums import Encoder
 from save_metrics import create_table_plot_metrics, force_decimal_places
 from overview import create_movie_overview
 from utils import line, exit_program, is_list, VideoInfoProvider, Timer
-from ffmpeg_process_factory import Encoder, EncodingArguments, \
+from ffmpeg_process_factory import EncodingArguments, \
                                    LibVmafArguments, FfmpegProcessFactory
 from arguments_validator import ArgumentsValidator
 

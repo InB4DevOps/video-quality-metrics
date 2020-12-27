@@ -2,6 +2,7 @@ from PyQt5 import QtCore
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 
 from vqm_consts import PRESETS
+from enums import VqmMode
 
 
 class VqmModel:
@@ -9,6 +10,7 @@ class VqmModel:
         self.video_path = str()
         self.crf_mode = CrfMode()
         self.preset_mode = PresetMode()
+        self.vqm_mode = VqmMode.crf
 
 
 class CrfMode:

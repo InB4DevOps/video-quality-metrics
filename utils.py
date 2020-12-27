@@ -47,7 +47,7 @@ class VideoInfoProvider:
 
     def get_bitrate(self, video_path=None, unit='Kbps'):
         if video_path:
-            bitrate = probe(video_path)['format']['bit_rate'] 
+            bitrate = probe(video_path)['format']['bit_rate']
         else:
             bitrate = probe(self._video_path)['format']['bit_rate']
         if unit == 'Kbps':
