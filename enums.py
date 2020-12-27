@@ -9,3 +9,9 @@ class VqmMode(Enum):
 class Encoder(Enum):
     x264 = 1
     x265 = 2
+
+
+class WidgetType(Enum):
+    input = 1
+    overview = 2
+    comparison = 3
