@@ -207,6 +207,13 @@ class StartProcessWidget(VqmBaseWidget):
         self.horizontal_Layout.setObjectName('horizontalLayout')
         self.horizontal_Layout.setAlignment(QtCore.Qt.AlignRight)
 
+        self.progress_bar = QtWidgets.QProgressBar(self)
+        self.progress_bar.setObjectName('progress_bar')
+        self.progress_bar.setTextVisible(True)
+        self.progress_bar.setFormat('')
+        self.progress_bar.setStyleSheet('text-align: center')
+        self.horizontal_Layout.addWidget(self.progress_bar)
+
         self.pushButton_Start = QtWidgets.QPushButton(self)
         self.pushButton_Start.setObjectName('pushButton_Start')
         self.pushButton_Start.setText('Start')
