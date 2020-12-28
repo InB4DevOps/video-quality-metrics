@@ -31,6 +31,7 @@ class InputFileWidget(VqmBaseWidget):
 
         self.lineEditSelectFile = QtWidgets.QLineEdit(self)
         self.lineEditSelectFile.setObjectName('lineEditSelectFile')
+        self.lineEditSelectFile.setReadOnly(True)
         self.horizontalLayout.addWidget(self.lineEditSelectFile)
 
         self.pushButtonBrowse = QtWidgets.QPushButton(self)
