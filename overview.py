@@ -37,7 +37,8 @@ def create_clips(video_path, output_folder, interval_seconds, clip_length):
     duration = int(float(provider.get_duration()))
 
     if interval_seconds > duration:
-        raise ClipError(f'The interval ({interval_seconds}s) may not be longer than the video ({duration}s).')
+        raise ClipError(f'The interval ({interval_seconds}s) may not be \
+                        longer than the video ({duration}s).')
 
     number_steps = math.trunc(duration / interval_seconds)
 
@@ -46,7 +47,8 @@ def create_clips(video_path, output_folder, interval_seconds, clip_length):
     open(txt_file_path, 'w').close()
 
     print('Overview mode activated.')
-    print(f'Creating a {clip_length} second clip every {interval_seconds} seconds from {video_path}...')
+    print(f'Creating a {clip_length} second clip every {interval_seconds} \
+          seconds from {video_path}...')
     line()
 
     try:
@@ -72,16 +74,19 @@ def create_clips(video_path, output_folder, interval_seconds, clip_length):
         return txt_file_path
 
 
-def concatenate_clips(txt_file_path, output_folder, extension, interval_seconds, clip_length):
+def concatenate_clips(txt_file_path, output_folder, extension,
+                      interval_seconds, clip_length):
     if not os.path.exists(txt_file_path):
         raise ConcatenateError(f'{txt_file_path} does not exist.')
 
-    overview_filename = f'{clip_length}-{interval_seconds} (ClipLength-IntervalSeconds){extension}'
+    overview_filename = f'{clip_length}-{interval_seconds} \
+                          (ClipLength-IntervalSeconds){extension}'
     concatenated_filepath = os.path.join(output_folder, overview_filename)
 
     subprocess_concatenate_args = [
         "ffmpeg", "-loglevel", "warning", "-stats", "-y",
-        "-f", "concat", "-safe", "0", "-i", txt_file_path, "-c", "copy", concatenated_filepath
+        "-f", "concat", "-safe", "0", "-i", txt_file_path, "-c", "copy",
+        concatenated_filepath
     ]
 
     line()
@@ -95,11 +100,15 @@ def concatenate_clips(txt_file_path, output_folder, extension, interval_seconds,
         return concatenated_filepath
 
 
-def create_movie_overview(video_path, output_folder, interval_seconds, clip_length):
+def create_movie_overview(video_path, output_folder, interval_seconds,
+                          clip_length):
     extension = Path(video_path).suffix
     try:
-        txt_file_path = create_clips(video_path, output_folder, interval_seconds, clip_length)
-        output_file = concatenate_clips(txt_file_path, output_folder, extension, interval_seconds, clip_length)
+        txt_file_path = create_clips(video_path, output_folder,
+                                     interval_seconds, clip_length)
+        output_file = concatenate_clips(txt_file_path, output_folder,
+                                        extension, interval_seconds,
+                                        clip_length)
         result = True
     except ClipError as err:
         result = False
@@ -109,6 +118,7 @@ def create_movie_overview(video_path, output_folder, interval_seconds, clip_leng
         exit_program(err.args[0])
 
     if result:
-        print(f'Overview Video: {clip_length}-{interval_seconds} (ClipLength-IntervalSeconds){extension}')
+        print(f'Overview Video: {clip_length}-{interval_seconds} \
+                (ClipLength-IntervalSeconds){extension}')
         line()
         return result, output_file

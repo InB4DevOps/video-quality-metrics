@@ -42,14 +42,14 @@ def main():
     # The time interval to use when creating the overview video.
     parser.add_argument('-i', '--interval', type=int, choices=range(1, 600), default=0,
                         help='Create a lossless overview video by grabbing a <cliplength> seconds long segment '
-							 'every <interval> seconds from the original video and use this overview video '
-							 'as the "original" video that the transcodes are compared with.\nExample: -i 30',
-						metavar='<an integer between 1 and 600>')
+                        'every <interval> seconds from the original video and use this overview video '
+                        'as the "original" video that the transcodes are compared with.\nExample: -i 30',
+                        metavar='<an integer between 1 and 600>')
     # The length of each clip.
     parser.add_argument('-cl', '--clip-length', type=int, choices=range(1, 60), default=1,
                         help='Defines the length of the clips. Only applies when used with -i > 0. Default: 1.\n'
-							 'Example: -cl 10', 
-						metavar='<an integer between 1 and 60>')
+                             'Example: -cl 10',
+                        metavar='<an integer between 1 and 60>')
     # Use only the first x seconds of the original video.
     parser.add_argument('-t', '--encoding-time', type=str,
                         help='Create a lossless version of the original video that is just the first x seconds of the '
@@ -59,8 +59,9 @@ def main():
     # Enable phone model?
     parser.add_argument('-pm', '--phone-model', action='store_true', help='Enable VMAF phone model.')
     # Number of decimal places to use for the data.
-    parser.add_argument('-dp', '--decimal-places', type=int, default=2, help='The number of decimal places to use for the data '
-                                                                   'in the table (default: 2).\nExample: -dp 3')
+    parser.add_argument('-dp', '--decimal-places', type=int, default=2,
+                        help='The number of decimal places to use for the data '
+                        'in the table (default: 2).\nExample: -dp 3')
     # Calculate SSIM?
     parser.add_argument('-ssim', '--calculate-ssim', action='store_true', help='Calculate SSIM in addition to VMAF.')
     # Calculate PSNR?
@@ -89,7 +90,7 @@ def main():
     filename = Path(original_video_path).name
     output_folder = f'({filename})'
     os.makedirs(output_folder, exist_ok=True)
-    
+
     # this includes the dot eg '.mp4'
     output_ext = Path(original_video_path).suffix
     # The M4V container does not support the H.265 codec.
@@ -128,7 +129,7 @@ def main():
             original_video_path = concatenated_video
         else:
             exit_program('Something went wrong when trying to create the overview video.')
-        
+
     factory = FfmpegProcessFactory()
     timer = Timer()
 
@@ -169,25 +170,25 @@ def main():
                 arguments.outfile = transcode_output_path
 
                 process = factory.create_process(arguments)
-                    
+
                 print(f'Transcoding the video with CRF {crf}...')
                 timer.start()
                 process.run()
                 time_rounded = timer.end(decimal_places)
                 print('Done!')
-                
+
                 transcode_size = os.path.getsize(transcode_output_path) / 1_000_000
                 transcoded_bitrate = provider.get_bitrate(transcode_output_path)
                 size_rounded = force_decimal_places(round(transcode_size, decimal_places), decimal_places)
                 data_for_current_row = [f'{size_rounded} MB', transcoded_bitrate]
-              
+
                 os.makedirs(os.path.join(output_folder, 'Raw JSON Data'), exist_ok=True)
                 # os.path.join doesn't work with libvmaf's log_path option so we're manually defining the path with
                 # slashes.
                 json_file_path = f'{output_folder}/Raw JSON Data/CRF {crf}.json'
 
                 run_libvmaf(transcode_output_path, args, json_file_path, fps, original_video_path, factory)
-            
+
                 create_table_plot_metrics(comparison_table, json_file_path, args, decimal_places, data_for_current_row,
                                           graph_filename, table, output_folder, time_rounded, crf)
 
@@ -195,7 +196,6 @@ def main():
                 f.write(f'\nFile Transcoded: {filename}')
                 f.write(f'\nBitrate: {original_bitrate}')
                 f.write(f'\nPreset used for the transcode(s): {preset}')
-                
 
         # args.preset is a list when more than one preset is specified.
         elif is_list(args.preset):
@@ -222,7 +222,7 @@ def main():
             for preset in chosen_presets:
                 transcode_output_path = os.path.join(output_folder, f'{preset}{output_ext}')
                 graph_filename = f"Preset '{preset}'"
-                
+
                 arguments = EncodingArguments()
                 arguments.infile = original_video_path
                 arguments.encoder = Encoder[video_encoder]
@@ -231,19 +231,19 @@ def main():
                 arguments.outfile = transcode_output_path
 
                 process = factory.create_process(arguments)
-                
+
                 line()
                 print(f'Transcoding the video with preset {preset}...')
                 timer.start()
                 process.run()
                 time_rounded = timer.end(decimal_places)
                 print('Done!')
-    
+
                 transcode_size = os.path.getsize(transcode_output_path) / 1_000_000
                 transcoded_bitrate = provider.get_bitrate(transcode_output_path)
                 size_rounded = force_decimal_places(round(transcode_size, decimal_places), decimal_places)
                 data_for_current_row = [f'{size_rounded} MB', transcoded_bitrate]
-           
+
                 os.makedirs(os.path.join(output_folder, 'Raw JSON Data'), exist_ok=True)
                 # os.path.join doesn't work with libvmaf's log_path option so we're manually defining the path with
                 # slashes.
@@ -251,7 +251,7 @@ def main():
 
                 run_libvmaf(transcode_output_path, args, json_file_path, fps, original_video_path, factory)
 
-                create_table_plot_metrics(comparison_table, json_file_path, args, decimal_places, data_for_current_row, 
+                create_table_plot_metrics(comparison_table, json_file_path, args, decimal_places, data_for_current_row,
                                           graph_filename, table, output_folder, time_rounded, preset)
 
             with open(comparison_table, 'a') as f:
@@ -275,11 +275,13 @@ def main():
         size_rounded = force_decimal_places(round(transcode_size, decimal_places), decimal_places)
         transcoded_bitrate = provider.get_bitrate(args.transcoded_video_path)
         data_for_current_row = [f'{size_rounded} MB', transcoded_bitrate]
-     
+
         graph_filename = 'The variation of the quality of the transcoded video throughout the video'
         # Create the table and plot the metrics if -dqm was not specified.
-        create_table_plot_metrics(json_file_path, args, decimal_places, data_for_current_row, graph_filename,
-                                            table, output_folder, time_rounded=None, crf_or_preset=None)
+        create_table_plot_metrics(json_file_path, args, decimal_places,
+                                  data_for_current_row, graph_filename,
+                                  table, output_folder, time_rounded=None,
+                                  crf_or_preset=None)
 
     line()
     print(f'All done! Check out the ({filename}) folder.')
@@ -308,7 +310,8 @@ def run_libvmaf(transcode_output_path, args, json_file_path, fps, original_video
     characters_to_escape = ["'", ":", ",", "[", "]"]
     for character in characters_to_escape:
         if character in json_file_path:
-            json_file_path = json_file_path.replace(character, f'\{character}')    
+            json_file_path = json_file_path.replace(character,
+                                                    f'\\{character}')
 
     vmaf_options = {
         "log_fmt": "json",
@@ -316,7 +319,7 @@ def run_libvmaf(transcode_output_path, args, json_file_path, fps, original_video
         "model_path": vmaf_model_file_path,
         "phone_model": "1" if args.phone_model else "0",
         "psnr": "1" if args.calculate_psnr else "0",
-        "ssim": "1" if args.calculate_ssim else "0" 
+        "ssim": "1" if args.calculate_ssim else "0"
     }
     vmaf_options = ":".join(f'{key}={value}' for key, value in vmaf_options.items())
 

@@ -119,8 +119,9 @@ class FfmpegProcess:
     def __init__(self, arguments):
         self.__arguments = arguments
         # For debugging (optional)
-        #from utils import subprocess_printer
-        #subprocess_printer('The following command will be run', self.__arguments)
+        # from utils import subprocess_printer
+        # subprocess_printer('The following command will be run',
+        #                    self.__arguments)
 
     def run(self):
         subprocess.run(self.__arguments)
