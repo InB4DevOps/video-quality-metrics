@@ -16,3 +16,5 @@ class WidgetType(Enum):
     overview = 2
     comparison = 3
     start_process = 4
+    encoder = 5
+    combined = 6

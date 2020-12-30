@@ -1,8 +1,8 @@
 from PyQt5 import QtCore
 from PyQt5.QtGui import QStandardItem, QStandardItemModel
 
+from enums import Encoder, VqmMode
 from vqm_consts import PRESETS
-from enums import VqmMode
 
 
 class VqmModel:
@@ -12,6 +12,17 @@ class VqmModel:
         self.crf_mode = CrfMode()
         self.preset_mode = PresetMode()
         self.vqm_mode = VqmMode.crf
+        self.encoder = EncoderModel()
+
+
+class EncoderModel(QStandardItemModel):
+    def __init__(self):
+        super().__init__()
+
+        for enc in Encoder:
+            item = QStandardItem(enc.name)
+            item.setData(enc)
+            self.appendRow(item)
 
 
 class CrfMode:

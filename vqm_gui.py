@@ -27,9 +27,9 @@ class VqmGui(Ui_MainWindow):
         self.input_Widget = wf.create(WidgetType.input)
         self.verticalLayout.addWidget(self.input_Widget)
 
-        self.overview_Widget = wf.create(WidgetType.overview)
-        self.verticalLayout.addWidget(self.overview_Widget)
-        self.overview_Widget.setEnabled(False)
+        self.combined_Widget = wf.create(WidgetType.combined)
+        self.verticalLayout.addWidget(self.combined_Widget)
+        self.combined_Widget.setEnabled(False)
 
         self.comparison_mode_Widget = wf.create(WidgetType.comparison)
         self.verticalLayout.addWidget(self.comparison_mode_Widget)
@@ -44,7 +44,7 @@ class VqmGui(Ui_MainWindow):
         self.input_Widget.status_bar_text.connect(self.update_statusbar)
 
     def enable_widgets(self):
-        self.overview_Widget.setEnabled(True)
+        self.combined_Widget.setEnabled(True)
         self.comparison_mode_Widget.setEnabled(True)
         self.start_process_Widget.setEnabled(True)
 
